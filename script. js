@@ -1,0 +1,97 @@
+const WHATSAPP_NUMBER = "254704620403";
+const sampleProperties = [
+ {id:"sample-1",title:"Contemporary Family Villa",category:"real-estate",location:"Kiamunyi, Nakuru",price:18500000,status:"available",beds:4,baths:3,area:"2,800 sqft",description:"A spacious modern family home with generous living areas and secure surroundings.",image:"https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?auto=format&fit=crop&w=1000&q=85"},
+ {id:"sample-2",title:"Modern City BNB Suite",category:"bnb",location:"Kilimani, Nairobi",price:6500,status:"available",beds:2,baths:1,area:"Per night",description:"A bright, comfortable short-stay apartment close to city conveniences.",image:"https://images.unsplash.com/photo-1611892440504-42a792e24d32?auto=format&fit=crop&w=1000&q=85"},
+ {id:"sample-3",title:"Residential Plot",category:"land",location:"Nakuru, Kenya",price:2500000,status:"available",beds:null,baths:null,area:"50 × 100 ft",description:"A residential plot with convenient access to nearby amenities.",image:"https://images.unsplash.com/photo-1500382017468-9049fed747ef?auto=format&fit=crop&w=1000&q=85"}
+];
+let properties = [...sampleProperties];
+const money = value => "KES " + Number(value).toLocaleString("en-KE");
+const categoryName = value => ({"real-estate":"Real Estate",bnb:"BNB & Stays",land:"Land"})[value] || value;
+
+function renderProperties(items) {
+ const grid = document.getElementById("propertyGrid");
+ document.getElementById("resultsCount").textContent = `${items.length} ${items.length === 1 ? "listing" : "listings"} found`;
+ if (!items.length) {
+   grid.innerHTML = '<div class="empty-state"><h3>No matching listings</h3><p>Try another category, location or price range.</p></div>';
+   return;
+ }
+ grid.innerHTML = items.map(p => `
+  <article class="property-card">
+   <img class="property-image" src="${escapeHTML(p.image || "")}" alt="${escapeHTML(p.title)}" loading="lazy" onerror="this.src='https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?auto=format&fit=crop&w=900&q=80'">
+   <div class="property-body">
+    <div class="property-top"><span class="property-tag">${categoryName(p.category)}</span><span class="status ${p.status}">${p.status}</span></div>
+    <h3>${escapeHTML(p.title)}</h3><div class="property-location">⌖ ${escapeHTML(p.location)}</div>
+    <p class="property-description">${escapeHTML(p.description || "")}</p>
+    <div class="property-bottom"><span class="property-price">${money(p.price)}${p.category==="bnb"?" / night":""}</span>
+    ${p.status==="available" ? `<button class="details-button" data-id="${p.id}">${p.category==="bnb"?"Request stay":"Enquire"} ↗</button>` : `<span class="details-button">Not available</span>`}</div>
+   </div>
+  </article>`).join("");
+ grid.querySelectorAll("[data-id]").forEach(button => button.addEventListener("click", () => {
+   const item = properties.find(p => p.id === button.dataset.id);
+   if (item.category === "bnb") openBooking(item);
+   else {
+     const message = `Hello ZAURAQ, I am interested in ${item.title} in ${item.location}, listed at ${money(item.price)}. Please share more details.`;
+     window.open(`https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(message)}`, "_blank", "noopener");
+   }
+ }));
+}
+function escapeHTML(value) {
+ return String(value ?? "").replace(/[&<>"']/g, char => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[char]));
+}
+function applySearch() {
+ const category = document.getElementById("categoryFilter").value;
+ const location = document.getElementById("locationFilter").value.trim().toLowerCase();
+ const maxPrice = Number(document.getElementById("priceFilter").value) || Infinity;
+ const filtered = properties.filter(p => p.status === "available" &&
+   (category === "all" || p.category === category) &&
+   (!location || p.location.toLowerCase().includes(location)) &&
+   Number(p.price) <= maxPrice);
+ renderProperties(filtered);
+ document.getElementById("properties").scrollIntoView({behavior:"smooth"});
+}
+document.getElementById("searchForm").addEventListener("submit", event => {event.preventDefault();applySearch();});
+document.getElementById("clearFilters").addEventListener("click", () => {
+ document.getElementById("categoryFilter").value="all";
+ document.getElementById("locationFilter").value="";
+ document.getElementById("priceFilter").value="";
+ renderProperties(properties.filter(p=>p.status==="available"));
+});
+document.querySelectorAll(".category-card").forEach(card => card.addEventListener("click", () => {
+ document.getElementById("categoryFilter").value=card.dataset.category;
+ applySearch();
+}));
+const adminModal=document.getElementById("adminModal");
+document.getElementById("openAdmin").addEventListener("click",()=>adminModal.hidden=false);
+document.getElementById("closeAdmin").addEventListener("click",()=>adminModal.hidden=true);
+adminModal.addEventListener("click",e=>{if(e.target===adminModal)adminModal.hidden=true;});
+const bookingModal=document.getElementById("bookingModal");
+function openBooking(item) {
+ document.getElementById("bookingListing").value=item.title;
+ document.getElementById("bookingTitle").textContent=`Request: ${item.title}`;
+ const today=new Date().toISOString().slice(0,10);
+ document.getElementById("checkIn").min=today;
+ document.getElementById("checkOut").min=today;
+ bookingModal.hidden=false;
+}
+document.getElementById("closeBooking").addEventListener("click",()=>bookingModal.hidden=true);
+bookingModal.addEventListener("click",e=>{if(e.target===bookingModal)bookingModal.hidden=true;});
+document.getElementById("checkIn").addEventListener("change",e=>{document.getElementById("checkOut").min=e.target.value;});
+document.getElementById("bookingForm").addEventListener("submit",event=>{
+ event.preventDefault();
+ const checkIn=document.getElementById("checkIn").value;
+ const checkOut=document.getElementById("checkOut").value;
+ if(!checkIn || !checkOut || checkOut<=checkIn){alert("Please choose a check-out date after your check-in date.");return;}
+ const fields={
+  name:document.getElementById("guestName").value.trim(),
+  phone:document.getElementById("guestPhone").value.trim(),
+  guests:document.getElementById("guestCount").value,
+  property:document.getElementById("bookingListing").value
+ };
+ const message=`Hello ZAURAQ, I would like to request a BNB booking.\nProperty: ${fields.property}\nName: ${fields.name}\nPhone: ${fields.phone}\nGuests: ${fields.guests}\nCheck-in: ${checkIn}\nCheck-out: ${checkOut}\nPlease confirm availability and total price.`;
+ window.open(`https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(message)}`,"_blank","noopener");
+ bookingModal.hidden=true;
+});
+document.getElementById("menuToggle").addEventListener("click",()=>document.getElementById("mainNav").classList.toggle("open"));
+document.querySelectorAll(".main-nav a").forEach(link=>link.addEventListener("click",()=>document.getElementById("mainNav").classList.remove("open")));
+document.getElementById("year").textContent=new Date().getFullYear();
+renderProperties(properties.filter(p=>p.status==="available"));

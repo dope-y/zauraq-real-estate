@@ -1,0 +1,642 @@
+<!DOCTYPE html>
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#090a0c">
+  <meta name="description" content="Discover homes, BNB stays and land across Kenya with ZAURAQ REAL ESTATE.">
+  <title>ZAURAQ REAL ESTATE | Property Across Kenya</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+<header class="site-header">
+  <a class="brand" href="#home" aria-label="ZAURAQ Real Estate home">
+    <img src="assets/zauraq-logo.jpg" alt="ZAURAQ silver monogram" class="brand-mark">
+    <span class="brand-wordmark"><strong>ZAURAQ</strong><small>REAL ESTATE</small></span>
+  </a>
+  <button class="menu-toggle" id="menuToggle" aria-label="Open navigation">☰</button>
+  <nav class="main-nav" id="mainNav">
+    <a href="#home">Home</a><a href="#properties">Properties</a><a href="#about">About</a><a href="#contact">Contact</a>
+    <button class="nav-admin" id="openAdmin"
+onclick="document.getElementById('adminModal').hidden = false">
+Owner Login
+    </button>
+  </nav>
+</header>
+
+<main>
+  <section class="hero" id="home">
+    <div class="hero-shade"></div>
+    <div class="hero-inner">
+      <p class="eyebrow">PROPERTY • STAYS • INVESTMENT</p>
+      <h1>Find a place<br><em>worth calling yours.</em></h1>
+      <p class="hero-copy">Explore exceptional homes, comfortable BNB stays and land opportunities across Kenya.</p>
+      <a class="button button-light" href="#properties">Explore listings <span>↗</span></a>
+    </div>
+    <div class="hero-note"><span class="silver-dot"></span> PROPERTY OPPORTUNITIES ACROSS KENYA</div>
+  </section>
+
+  <section class="search-wrap" aria-label="Search properties">
+    <form class="search-panel" id="searchForm">
+      <label>I'm looking for
+        <select id="categoryFilter">
+          <option value="all">All categories</option><option value="real-estate">Real Estate</option><option value="bnb">BNB & Stays</option><option value="land">Land</option>
+        </select>
+      </label>
+      <label>Location
+        <input id="locationFilter" type="search" placeholder="County, town or area">
+      </label>
+      <label>Maximum price (KES)
+        <input id="priceFilter" type="number" min="0" placeholder="Any price">
+      </label>
+      <button class="button button-dark" type="submit">Search listings <span>⌕</span></button>
+    </form>
+  </section>
+
+  <section class="section categories-section">
+    <div class="section-heading">
+      <p class="eyebrow">DISCOVER ZAURAQ</p><h2>Spaces for every<br><em>next chapter.</em></h2>
+      <p>From a place to call home to your next investment, start exploring.</p>
+    </div>
+    <div class="category-cards">
+      <button class="category-card category-home" data-category="real-estate"><span>01 / HOMES</span><strong>Real Estate</strong><small>Houses, apartments & homes</small><b>Explore ↗</b></button>
+      <button class="category-card category-stay" data-category="bnb"><span>02 / STAYS</span><strong>BNB & Stays</strong><small>Short stays made comfortable</small><b>Explore ↗</b></button>
+      <button class="category-card category-land" data-category="land"><span>03 / INVESTMENT</span><strong>Land & Plots</strong><small>Find your place to build</small><b>Explore ↗</b></button>
+    </div>
+  </section>
+
+  <section class="section listings-section" id="properties">
+    <div class="listing-heading">
+      <div><p class="eyebrow">THE ZAURAQ COLLECTION</p><h2>Explore available<br><em>properties.</em></h2></div>
+      <p class="listing-intro">Thoughtfully presented opportunities from across Kenya.</p>
+    </div>
+    <div class="results-meta"><span id="resultsCount">Sample listings</span><button id="clearFilters" class="text-button">Clear filters ↺</button></div>
+    <div class="property-grid" id="propertyGrid">
+      <article class="property-card skeleton"><div class="skeleton-image"></div><div class="skeleton-line"></div></article>
+      <article class="property-card skeleton"><div class="skeleton-image"></div><div class="skeleton-line"></div></article>
+      <article class="property-card skeleton"><div class="skeleton-image"></div><div class="skeleton-line"></div></article>
+    </div>
+    <p class="demo-notice" id="dataNotice">Preview listings are examples. The owner can publish real listings after the database is connected.</p>
+  </section>
+
+  <section class="statement-section" id="about">
+    <div class="statement-mark">Z</div>
+    <div><p class="eyebrow">THE ZAURAQ APPROACH</p><h2>More than property.<br><em>A better way forward.</em></h2><p>ZAURAQ REAL ESTATE brings homes, short-stay accommodation and land opportunities together in one easy place. Our goal is to make discovering your next property clear, convenient and personal.</p></div>
+  </section>
+
+  <section class="contact-section" id="contact">
+    <div><p class="eyebrow">LET'S TALK PROPERTY</p><h2>Your next move<br><em>starts here.</em></h2><p>Speak to the ZAURAQ team about a listing, viewing or booking enquiry.</p></div>
+    <div class="contact-actions">
+      <a class="button button-light" href="https://wa.me/254704620403" target="_blank" rel="noopener">WhatsApp the team ↗</a>
+      <a class="phone-link" href="tel:+254704620403">Call +254 704 620403</a>
+      <small>Nationwide service • Kenya</small>
+    </div>
+  </section>
+</main>
+
+<footer class="site-footer"><a class="footer-brand" href="#home">ZAURAQ <span>REAL ESTATE</span></a><span>© <span id="year"></span> ZAURAQ REAL ESTATE. All rights reserved.</span><a href="#home">Back to top ↑</a></footer>
+
+<a class="floating-whatsapp" href="https://wa.me/254704620403" target="_blank" rel="noopener" aria-label="Chat with ZAURAQ on WhatsApp">✆</a>
+
+<!-- Owner panel: demo interface only until Supabase is configured -->
+
+<div class="modal-backdrop" id="adminModal" hidden>
+  <section class="admin-modal" role="dialog" aria-modal="true" aria-labelledby="adminTitle">
+    <button class="modal-close" id="closeAdmin"
+onclick="document.getElementById('adminModal').hidden=true"
+aria-label="Close">×</button>
+
+    <p class="eyebrow">ZAURAQ PRIVATE AREA</p>
+    <h2 id="adminTitle">Owner Login</h2>
+
+    <form id="ownerLoginForm">
+      <label>
+        Owner email
+        <input
+          id="ownerEmail"
+          type="email"
+          value="dopeyjames28@gmail.com"
+          required
+        >
+      </label>
+
+      <label>
+        Password
+        <input
+          id="ownerPassword"
+          type="password"
+          placeholder="Enter your owner password"
+          required
+        >
+      </label>
+
+      <button class="button button-dark" type="submit">
+        Sign in
+      </button>
+
+      <p id="ownerLoginStatus" class="small-note">
+        Sign in using your ZAURAQ owner account.
+      </p>
+    </form>
+  </section>
+</div>
+
+  <section class="admin-modal booking-modal" role="dialog" aria-modal="true" aria-labelledby="bookingTitle">
+    <button class="modal-close" id="closeBooking" aria-label="Close">×</button>
+    <p class="eyebrow">BNB ENQUIRY</p><h2 id="bookingTitle">Request your stay</h2>
+    <form id="bookingForm">
+      <input type="hidden" id="bookingListing">
+      <label>Full name<input id="guestName" required placeholder="Your name"></label>
+      <label>Phone number<input id="guestPhone" required type="tel" placeholder="+254..."></label>
+      <div class="date-row"><label>Check-in<input id="checkIn" type="date" required></label><label>Check-out<input id="checkOut" type="date" required></label></div>
+      <label>Guests<input id="guestCount" type="number" min="1" max="30" value="2" required></label>
+      <button class="button button-dark" type="submit">Send booking request on WhatsApp ↗</button>
+      <p class="small-note">This sends a booking request. Your stay is not confirmed until the owner responds.</p>
+    </form>
+  </section>
+</>
+
+
+<script src="script.js"></script>
+<script>
+  const check = document.createElement("div");
+  check.style.cssText =
+    "background:#111;color:white;padding:15px;text-align:center;position:relative;z-index:99999;";
+  check.textContent = window.zauraqSupabase
+    ? "ZAURAQ CLIENT INITIALIZED"
+    : "ZAURAQ CLIENT NOT INITIALIZED";
+  document.body.appendChild(check);
+    </script>
+<script>
+(function () {
+  const grid = document.getElementById("propertyGrid");
+  const count = document.getElementById("resultsCount");
+
+  if (!grid) return;
+
+  const listings = [
+    {
+      title: "Contemporary Family Villa",
+      category: "real-estate",
+      type: "REAL ESTATE",
+      location: "Kiamunyi, Nakuru",
+      price: 18500000,
+      image: "https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?auto=format&fit=crop&w=900&q=85",
+      details: "4 Bedrooms • 3 Bathrooms",
+      status: "Available"
+    },
+    {
+      title: "Modern City BNB Suite",
+      category: "bnb",
+      type: "BNB & STAYS",
+      location: "Kilimani, Nairobi",
+      price: 6500,
+      image: "https://images.unsplash.com/photo-1611892440504-42a792e24d32?auto=format&fit=crop&w=900&q=85",
+      details: "2 Bedrooms • Per night",
+      status: "Available"
+    },
+    {
+      title: "Residential Plot",
+      category: "land",
+      type: "LAND",
+      location: "Nakuru, Kenya",
+      price: 2500000,
+      image: "https://images.unsplash.com/photo-1500382017468-9049fed747ef?auto=format&fit=crop&w=900&q=85",
+      details: "50 × 100 ft • Residential",
+      status: "Available"
+    }
+  ];
+
+  function showProperties(items) {
+    if (count) {
+      count.textContent = items.length + " listings found";
+    }
+
+    grid.style.display = "grid";
+    grid.style.gridTemplateColumns =
+      "repeat(auto-fit, minmax(250px, 1fr))";
+    grid.style.gap = "22px";
+
+    if (!items.length) {
+      grid.innerHTML =
+        '<p style="padding:25px">No matching properties found.</p>';
+      return;
+    }
+
+    grid.innerHTML = items.map(p => `
+      <article style="
+        background:#fff;
+        color:#171717;
+        border-radius:15px;
+        overflow:hidden;
+        border:1px solid #ddd;
+        box-shadow:0 8px 25px rgba(0,0,0,.08);
+      ">
+        <img src="${p.image}"
+          alt="${p.title}"
+          loading="lazy"
+          style="width:100%;height:210px;object-fit:cover;display:block">
+
+        <div style="padding:18px">
+          <small style="color:#947b45;font-weight:bold">
+            ${p.type}
+          </small>
+
+          <h3 style="margin:10px 0">${p.title}</h3>
+
+          <p style="color:#666;margin:8px 0">
+            📍 ${p.location}
+          </p>
+
+          <p style="color:#666;margin:8px 0">
+            ${p.details}
+          </p>
+
+          <p style="font-size:21px;font-weight:bold;margin:15px 0">
+            KES ${p.price.toLocaleString("en-KE")}
+            ${p.category === "bnb" ? "/ night" : ""}
+          </p>
+
+          <span style="color:#187a45;font-weight:bold">
+            ● ${p.status}
+          </span>
+
+          <a href="https://wa.me/254704620403?text=${encodeURIComponent(
+            "Hello ZAURAQ, I am interested in " +
+            p.title + " located in " + p.location
+          )}"
+          target="_blank"
+          style="
+            display:block;
+            text-align:center;
+            background:#111;
+            color:white;
+            padding:13px;
+            border-radius:8px;
+            text-decoration:none;
+            margin-top:15px;
+            font-weight:bold;
+          ">Enquire on WhatsApp</a>
+        </div>
+      </article>
+    `).join("");
+  }
+
+  function searchProperties() {
+    const category =
+      document.getElementById("categoryFilter")?.value || "all";
+
+    const location =
+      document.getElementById("locationFilter")?.value
+        .trim().toLowerCase() || "";
+
+    const maxPrice =
+      Number(document.getElementById("priceFilter")?.value)
+        || Infinity;
+
+    const filtered = listings.filter(p =>
+      (category === "all" || p.category === category) &&
+      p.location.toLowerCase().includes(location) &&
+      p.price <= maxPrice
+    );
+
+    showProperties(filtered);
+  }
+
+  document.getElementById("searchForm")
+    ?.addEventListener("submit", function(e) {
+      e.preventDefault();
+      searchProperties();
+    });
+
+  document.getElementById("clearFilters")
+    ?.addEventListener("click", function() {
+      document.getElementById("categoryFilter").value = "all";
+      document.getElementById("locationFilter").value = "";
+      document.getElementById("priceFilter").value = "";
+      showProperties(listings);
+    });
+
+  showProperties(listings);
+})();
+
+</script>
+  
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script
+  src="./supabase.js"
+  onload="document.getElementById('fileStatus').textContent='SUPABASE FILE LOADED';"
+  onerror="document.getElementById('fileStatus').textContent='SUPABASE FILE FAILED TO LOAD';">
+</script>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+<script>
+(async function () {
+  const SUPABASE_URL = "https://jthapqklxvhighdbdkei.supabase.co";
+
+  const SUPABASE_ANON_KEY = "sb_publishable_T_2SuGOs-XIjXBng9DMDFA_Nsysnq-p";
+
+  const status = document.createElement("div");
+  status.style.cssText =
+    "padding:12px;text-align:center;background:#111;color:white;";
+  status.textContent = "Connecting ZAURAQ...";
+  document.body.appendChild(status);
+
+  try {
+    if (!window.supabase) {
+      throw new Error("Supabase library did not load.");
+    }
+
+    const client = window.supabase.createClient(
+      SUPABASE_URL,
+      SUPABASE_ANON_KEY
+    );
+
+    window.zauraqSupabase = client;
+
+    const { data, error } = await client
+      .from("properties")
+      .select("id,title,category,location,price,description,image_urls,status")
+      .eq("is_published", true);
+
+    if (error) throw error;
+
+    status.textContent =
+      "ZAURAQ CONNECTED — " + data.length + " published properties found.";
+
+    console.log("ZAURAQ properties:", data);
+
+  } catch (error) {
+    status.textContent = "Connection error: " + error.message;
+    console.error("ZAURAQ error:", error);
+  }
+})();
+</script>
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+    const menuToggle = document.getElementById("menuToggle");
+    const mainNav = document.getElementById("mainNav");
+
+    if (menuToggle && mainNav) {
+        menuToggle.addEventListener("click", function () {
+            mainNav.classList.toggle("open");
+        });
+    }
+});
+</script>
+  
+<script>
+document.getElementById("ownerLoginForm").addEventListener("submit", async function(event) {
+    event.preventDefault();
+
+    const email = document.getElementById("ownerEmail").value.trim();
+    const password = document.getElementById("ownerPassword").value;
+    const status = document.getElementById("ownerLoginStatus");
+    const button = this.querySelector('button[type="submit"]');
+
+    const client = window.zauraqSupabase;
+
+    if (!client) {
+        status.textContent = "Supabase connection is not ready. Refresh and try again.";
+        return;
+    }
+
+    button.disabled = true;
+    status.textContent = "Verifying owner account...";
+
+    try {
+        const { data, error } = await client.auth.signInWithPassword({
+            email: email,
+            password: password
+        });
+
+        if (error) throw error;
+
+        const { data: profile, error: profileError } = await client
+            .from("profiles")
+            .select("role")
+            .eq("id", data.user.id)
+            .single();
+
+        if (profileError) throw profileError;
+
+        if (profile.role !== "owner") {
+            await client.auth.signOut();
+            throw new Error("This account does not have owner access.");
+        }
+
+        document.getElementById("adminTitle").textContent = "Owner Dashboard";
+
+        
+this.innerHTML = `
+    <h3>ZAURAQ Property Management</h3>
+    <p>Welcome, Owner. Add a property to your listings.</p>
+
+    <div style="display:grid;gap:12px;margin-top:20px;">
+
+        <label>Property title
+            <input id="propertyTitle" placeholder="e.g. Luxury 3-bedroom house" required>
+        </label>
+
+        <label>Category
+            <select id="propertyCategory">
+                <option value="house">House</option>
+                <option value="apartment">Apartment</option>
+                <option value="land">Land</option>
+                <option value="bnb">BNB</option>
+                <option value="commercial">Commercial</option>
+            </select>
+        </label>
+
+        <label>Location
+            <input id="propertyLocation" placeholder="e.g. Nairobi, Kenya" required>
+        </label>
+
+        <label>Price (KES)
+            <input id="propertyPrice" type="number" min="1" placeholder="8500000" required>
+        </label>
+
+        <label>Description
+            <textarea id="propertyDescription" rows="4" placeholder="Describe the property..."></textarea>
+        </label>
+
+        <label>Bedrooms
+            <input id="propertyBedrooms" type="number" min="0" placeholder="Optional">
+        </label>
+
+        <label>Bathrooms
+            <input id="propertyBathrooms" type="number" min="0" placeholder="Optional">
+        </label>
+
+        <label>Area (e.g. 50 acres or 120 sqm)
+            <input id="propertyArea" placeholder="Optional">
+        </label>
+<label>Property Photos
+    <input
+    id="propertyPhotos"
+    type="file"
+    accept="image/*"
+    multiple
+    onchange="document.getElementById('propertySaveStatus').textContent = this.files.length + ' photo(s) selected';"
+>
+   
+</label>
+<div id="photoPreview"
+     style="display:flex;gap:10px;flex-wrap:wrap;margin:10px 0;">
+</div>
+        <button type="button" class="button button-dark" id="saveProperty">
+            Publish Property
+        </button>
+
+        <p id="propertySaveStatus" class="small-note">
+            Your listing will be saved to ZAURAQ.
+        </p>
+
+        <button type="button" class="button button-dark" id="ownerLogout">
+            Sign out
+        </button>
+
+    </div>
+`;
+document.getElementById("propertyPhotos").addEventListener("change", function () {
+    const preview = document.getElementById("photoPreview");
+    preview.innerHTML = "";
+
+    Array.from(this.files).forEach(function(file) {
+        const reader = new FileReader();
+
+        reader.onload = function(event) {
+            const img = document.createElement("img");
+            img.src = event.target.result;
+            img.style.width = "90px";
+            img.style.height = "90px";
+            img.style.objectFit = "cover";
+            img.style.borderRadius = "8px";
+            preview.appendChild(img);
+        };
+
+        reader.readAsDataURL(file);
+    });
+});
+document.getElementById("saveProperty").addEventListener("click", async function() {
+    const title = document.getElementById("propertyTitle").value.trim();
+    const category = document.getElementById("propertyCategory").value;
+    const location = document.getElementById("propertyLocation").value.trim();
+    const price = Number(document.getElementById("propertyPrice").value);
+    const description = document.getElementById("propertyDescription").value.trim();
+    const bedrooms = document.getElementById("propertyBedrooms").value;
+    const bathrooms = document.getElementById("propertyBathrooms").value;
+    const area = document.getElementById("propertyArea").value.trim();
+    const status = document.getElementById("propertySaveStatus");
+
+    if (!title || !location || !price || price < 1) {
+        status.textContent = "Please enter a title, location and valid price.";
+        return;
+    }
+
+
+    this.disabled = true;
+    status.textContent = "Uploading photos and saving property...";
+
+    try {
+        const photoInput = document.getElementById("propertyPhotos");
+        const selectedPhotos = Array.from(photoInput.files);
+      console.log("Selected photos:", selectedPhotos.length);
+      if (selectedPhotos.length === 0) {
+    throw new Error("No photo selected. Please choose a photo.");
+}
+
+status.textContent = selectedPhotos.length + " photo(s) selected. Uploading...";
+        const imageUrls = [];
+
+        for (let i = 0; i < selectedPhotos.length; i++) {
+            const file = selectedPhotos[i];
+
+            if (!file.type.startsWith("image/")) {
+                throw new Error("Please select image files only.");
+            }
+
+            if (file.size > 5 * 1024 * 1024) {
+                throw new Error(file.name + " is larger than 5MB.");
+            }
+
+            const safeName = file.name.replace(/[^a-zA-Z0-9._-]/g, "_");
+            const filePath = Date.now() + "-" + i + "-" + safeName;
+
+            const { error: uploadError } = await client.storage
+                .from("property-images")
+                .upload(filePath, file);
+
+            if (uploadError) throw uploadError;
+
+            const { data: publicData } = client.storage
+                .from("property-images")
+                .getPublicUrl(filePath);
+
+            imageUrls.push(publicData.publicUrl);
+        }
+
+        const property = {
+            title,
+            category,
+            location,
+            price,
+            description,
+            status: "available",
+            is_published: true,
+            image_urls: imageUrls
+        };
+
+        if (bedrooms !== "") property.bedrooms = Number(bedrooms);
+        if (bathrooms !== "") property.bathrooms = Number(bathrooms);
+        if (area !== "") property.area = area;
+
+        const { error } = await client
+            .from("properties")
+            .insert(property);
+
+        if (error) throw error;
+
+        status.textContent = "SUCCESS! Property and photos published to ZAURAQ.";
+
+        document.getElementById("propertyTitle").value = "";
+        document.getElementById("propertyLocation").value = "";
+        document.getElementById("propertyPrice").value = "";
+        document.getElementById("propertyDescription").value = "";
+        document.getElementById("propertyBedrooms").value = "";
+        document.getElementById("propertyBathrooms").value = "";
+        document.getElementById("propertyArea").value = "";
+        photoInput.value = "";
+
+    } catch (error) {
+        status.textContent = "Could not save: " + error.message;
+    }
+
+    this.disabled = false;
+
+});
+
+document.getElementById("ownerLogout").addEventListener("click", async function() {
+    await client.auth.signOut();
+    location.reload();
+});
+
+
+    
+
+    } catch (error) {
+        status.textContent = error.message;
+        button.disabled = false;
+    }
+});
+</script>
+</body>
+</html>
+
+</body>
+</html>
+
