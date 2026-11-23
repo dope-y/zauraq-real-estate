@@ -364,6 +364,8 @@ aria-label="Close">×</button>
       .eq("is_published", true);
 
     if (error) throw error;
+    window.zauraqProperties = data;
+window.dispatchEvent(new Event("zauraq-properties-loaded"));
 
     status.textContent =
       "ZAURAQ CONNECTED — " + data.length + " published properties found.";
