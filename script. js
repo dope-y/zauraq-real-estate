@@ -94,4 +94,35 @@ document.getElementById("bookingForm").addEventListener("submit",event=>{
 document.getElementById("menuToggle").addEventListener("click",()=>document.getElementById("mainNav").classList.toggle("open"));
 document.querySelectorAll(".main-nav a").forEach(link=>link.addEventListener("click",()=>document.getElementById("mainNav").classList.remove("open")));
 document.getElementById("year").textContent=new Date().getFullYear();
-renderProperties(properties.filter(p=>p.status==="available"));
+function loadZauraqListings(rows) {
+    properties = rows.map(p => ({
+        id: p.id,
+        title: p.title,
+        category: p.category === "bnb" ? "bnb" :
+                  p.category === "land" ? "land" : "real-estate",
+        location: p.location,
+        price: p.price,
+        status: p.status,
+        beds: p.bedrooms,
+        baths: p.bathrooms,
+        area: p.area || "",
+        description: p.description || "",
+        image: p.image_urls && p.image_urls.length
+            ? p.image_urls[0]
+            : ""
+    }));
+
+    renderProperties(properties.filter(p => p.status === "available"));
+}
+
+window.addEventListener("zauraq-properties-loaded", function () {
+    if (window.zauraqProperties) {
+        loadZauraqListings(window.zauraqProperties);
+    }
+});
+
+if (window.zauraqProperties) {
+    loadZauraqListings(window.zauraqProperties);
+} else {
+    renderProperties(properties.filter(p => p.status === "available"));
+}
