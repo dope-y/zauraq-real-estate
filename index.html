@@ -415,6 +415,8 @@ document.getElementById("ownerLoginForm").addEventListener("submit", async funct
         });
 
         if (error) throw error;
+      window.zauraqProperties = data;
+window.dispatchEvent(new Event("zauraq-properties-loaded"));
 
         const { data: profile, error: profileError } = await client
             .from("profiles")
