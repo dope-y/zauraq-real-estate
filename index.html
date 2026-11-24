@@ -264,7 +264,7 @@ window.dispatchEvent(new Event("zauraq-properties-loaded"));
 
         if (profileError) throw profileError;
 
-        if (profile.role !== "owner") {
+        if (!["owner", "admin"].includes(profile.role)) {
             await client.auth.signOut();
             throw new Error("This account does not have owner access.");
         }
