@@ -144,19 +144,53 @@ aria-label="Close">×</button>
   </section>
 </div>
 
-  <section class="admin-modal booking-modal" id="bookingModal" role="dialog" aria-modal="true" aria-labelledby="bookingTitle">
-    <button class="modal-close" id="closeBooking" aria-label="Close">×</button>
-    <p class="eyebrow">BNB ENQUIRY</p><h2 id="bookingTitle">Request your stay</h2>
+<div class="modal-backdrop" id="bookingModal" hidden>
+  <section class="admin-modal booking-modal"
+           role="dialog"
+           aria-modal="true"
+           aria-labelledby="bookingTitle">
+
+    <button class="modal-close" id="closeBooking"
+            aria-label="Close">×</button>
+
+    <p class="eyebrow">BNB ENQUIRY</p>
+    <h2 id="bookingTitle">Request your stay</h2>
+
     <form id="bookingForm">
       <input type="hidden" id="bookingListing">
-      <label>Full name<input id="guestName" required placeholder="Your name"></label>
-      <label>Phone number<input id="guestPhone" required type="tel" placeholder="+254..."></label>
-      <div class="date-row"><label>Check-in<input id="checkIn" type="date" required></label><label>Check-out<input id="checkOut" type="date" required></label></div>
-      <label>Guests<input id="guestCount" type="number" min="1" max="30" value="2" required></label>
-      <button class="button button-dark" type="submit">Send booking request on WhatsApp ↗</button>
-      <p class="small-note">This sends a booking request. Your stay is not confirmed until the owner responds.</p>
+
+      <label>Full name
+        <input id="guestName" required placeholder="Your name">
+      </label>
+
+      <label>Phone number
+        <input id="guestPhone" required type="tel" placeholder="+254...">
+      </label>
+
+      <div class="date-row">
+        <label>Check-in
+          <input id="checkIn" type="date" required>
+        </label>
+        <label>Check-out
+          <input id="checkOut" type="date" required>
+        </label>
+      </div>
+
+      <label>Guests
+        <input id="guestCount" type="number"
+               min="1" max="30" value="2" required>
+      </label>
+
+      <button class="button button-dark" type="submit">
+        Send booking request on WhatsApp ↗
+      </button>
+
+      <p class="small-note">
+        Your stay is not confirmed until the owner responds.
+      </p>
     </form>
   </section>
+</div>
 </>
 
 <script src="script. js"></script>
