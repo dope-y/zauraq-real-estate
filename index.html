@@ -417,6 +417,7 @@ this.innerHTML = `
     </div>
 `;
       
+
 // ADMIN PROPERTY STATUS MANAGER
 if (profile.role === "admin") {
     const manager = document.getElementById("adminPropertyManager");
@@ -447,18 +448,43 @@ if (profile.role === "admin") {
 
         data.forEach(property => {
             const card = document.createElement("div");
-            card.style.cssText =
-                "padding:12px;margin:12px 0;border:1px solid #555;border-radius:8px;";
 
-            const title = document.createElement("strong");
+            card.style.cssText = `
+                background:linear-gradient(145deg,#172333,#0d1520);
+                border:1px solid rgba(201,168,106,.25);
+                border-radius:15px;
+                padding:17px;
+                margin:14px 0;
+                box-shadow:0 8px 22px rgba(0,0,0,.2);
+                color:#fff;
+            `;
+
+            const title = document.createElement("h4");
             title.textContent = property.title;
+            title.style.cssText =
+                "font-size:17px;margin:0 0 8px;color:#fff;";
 
             const details = document.createElement("p");
             details.textContent =
-                property.category.toUpperCase() + " • " + property.location;
+                property.category.toUpperCase() + "  •  " + property.location;
+            details.style.cssText =
+                "font-size:12px;color:#aab4c2;margin:0 0 14px;";
+
+            const statusLabel = document.createElement("p");
+            statusLabel.textContent = "CURRENT STATUS";
+            statusLabel.style.cssText =
+                "font-size:10px;letter-spacing:2px;color:#c9a86a;margin:0 0 7px;font-weight:bold;";
 
             const select = document.createElement("select");
-            select.style.cssText = "width:100%;padding:10px;margin-top:8px;";
+            select.style.cssText = `
+                width:100%;
+                padding:12px;
+                border-radius:9px;
+                background:#09111b;
+                color:#fff;
+                border:1px solid #806b48;
+                margin-bottom:12px;
+            `;
 
             const options = property.category === "bnb"
                 ? ["available", "booked"]
@@ -475,6 +501,7 @@ if (profile.role === "admin") {
             select.value = property.status;
 
             select.addEventListener("change", async () => {
+                const previousStatus = property.status;
                 select.disabled = true;
                 message.textContent = "Updating " + property.title + "...";
 
@@ -485,7 +512,7 @@ if (profile.role === "admin") {
 
                 if (error) {
                     message.textContent = "Update failed: " + error.message;
-                    select.value = property.status;
+                    select.value = previousStatus;
                 } else {
                     property.status = select.value;
                     message.textContent =
@@ -495,134 +522,62 @@ if (profile.role === "admin") {
                 select.disabled = false;
             });
 
+            const deleteButton = document.createElement("button");
+            deleteButton.type = "button";
+            deleteButton.textContent = "Delete Property";
+            deleteButton.style.cssText = `
+                width:100%;
+                padding:12px;
+                border-radius:9px;
+                background:#351a20;
+                color:#ffb4b4;
+                border:1px solid #8c414b;
+                font-weight:600;
+                cursor:pointer;
+            `;
+
+            deleteButton.addEventListener("click", async () => {
+                const confirmed = confirm(
+                    "Are you sure you want to permanently delete '" +
+                    property.title + "'? This cannot be undone."
+                );
+
+                if (!confirmed) return;
+
+                deleteButton.disabled = true;
+                deleteButton.textContent = "Deleting...";
+                message.textContent = "Deleting " + property.title + "...";
+
+                const { error } = await client
+                    .from("properties")
+                    .delete()
+                    .eq("id", property.id);
+
+                if (error) {
+                    message.textContent =
+                        "Delete failed: " + error.message;
+                    deleteButton.disabled = false;
+                    deleteButton.textContent = "Delete Property";
+                } else {
+                    message.textContent =
+                        property.title + " was deleted.";
+                    await loadAdminProperties();
+                }
+            });
+
             card.appendChild(title);
             card.appendChild(details);
+            card.appendChild(statusLabel);
             card.appendChild(select);
+            card.appendChild(deleteButton);
+
             list.appendChild(card);
         });
     }
 
     loadAdminProperties();
-}
-      
-document.getElementById("propertyPhotos").addEventListener("change", function () {
-    const preview = document.getElementById("photoPreview");
-    preview.innerHTML = "";
-
-    Array.from(this.files).forEach(function(file) {
-        const reader = new FileReader();
-
-        reader.onload = function(event) {
-            const img = document.createElement("img");
-            img.src = event.target.result;
-            img.style.width = "90px";
-            img.style.height = "90px";
-            img.style.objectFit = "cover";
-            img.style.borderRadius = "8px";
-            preview.appendChild(img);
-        };
-
-        reader.readAsDataURL(file);
-    });
-});
-document.getElementById("saveProperty").addEventListener("click", async function() {
-    const title = document.getElementById("propertyTitle").value.trim();
-    const category = document.getElementById("propertyCategory").value;
-    const location = document.getElementById("propertyLocation").value.trim();
-    const price = Number(document.getElementById("propertyPrice").value);
-    const description = document.getElementById("propertyDescription").value.trim();
-    const bedrooms = document.getElementById("propertyBedrooms").value;
-    const bathrooms = document.getElementById("propertyBathrooms").value;
-    const area = document.getElementById("propertyArea").value.trim();
-    const status = document.getElementById("propertySaveStatus");
-
-    if (!title || !location || !price || price < 1) {
-        status.textContent = "Please enter a title, location and valid price.";
-        return;
     }
-
-
-    this.disabled = true;
-    status.textContent = "Uploading photos and saving property...";
-
-    try {
-        const photoInput = document.getElementById("propertyPhotos");
-        const selectedPhotos = Array.from(photoInput.files);
-      console.log("Selected photos:", selectedPhotos.length);
-      if (selectedPhotos.length === 0) {
-    throw new Error("No photo selected. Please choose a photo.");
-}
-
-status.textContent = selectedPhotos.length + " photo(s) selected. Uploading...";
-        const imageUrls = [];
-
-        for (let i = 0; i < selectedPhotos.length; i++) {
-            const file = selectedPhotos[i];
-
-            if (!file.type.startsWith("image/")) {
-                throw new Error("Please select image files only.");
-            }
-
-            if (file.size > 5 * 1024 * 1024) {
-                throw new Error(file.name + " is larger than 5MB.");
-            }
-
-            const safeName = file.name.replace(/[^a-zA-Z0-9._-]/g, "_");
-            const filePath = Date.now() + "-" + i + "-" + safeName;
-
-            const { error: uploadError } = await client.storage
-                .from("property-images")
-                .upload(filePath, file);
-
-            if (uploadError) throw uploadError;
-
-            const { data: publicData } = client.storage
-                .from("property-images")
-                .getPublicUrl(filePath);
-
-            imageUrls.push(publicData.publicUrl);
-        }
-
-        const property = {
-            title,
-            category,
-            location,
-            price,
-            description,
-            status: "available",
-            is_published: true,
-            image_urls: imageUrls
-        };
-
-        if (bedrooms !== "") property.bedrooms = Number(bedrooms);
-        if (bathrooms !== "") property.bathrooms = Number(bathrooms);
-        if (area !== "") property.area = area;
-
-        const { error } = await client
-            .from("properties")
-            .insert(property);
-
-        if (error) throw error;
-
-        status.textContent = "SUCCESS! Property and photos published to ZAURAQ.";
-
-        document.getElementById("propertyTitle").value = "";
-        document.getElementById("propertyLocation").value = "";
-        document.getElementById("propertyPrice").value = "";
-        document.getElementById("propertyDescription").value = "";
-        document.getElementById("propertyBedrooms").value = "";
-        document.getElementById("propertyBathrooms").value = "";
-        document.getElementById("propertyArea").value = "";
-        photoInput.value = "";
-
-    } catch (error) {
-        status.textContent = "Could not save: " + error.message;
-    }
-
-    this.disabled = false;
-
-});
-
+  
 document.getElementById("ownerLogout").addEventListener("click", async function() {
     await client.auth.signOut();
     location.reload();
