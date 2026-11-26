@@ -60,33 +60,95 @@ const adminModal=document.getElementById("adminModal");
 document.getElementById("openAdmin").addEventListener("click",()=>adminModal.hidden=false);
 document.getElementById("closeAdmin").addEventListener("click",()=>adminModal.hidden=true);
 adminModal.addEventListener("click",e=>{if(e.target===adminModal)adminModal.hidden=true;});
-const bookingModal=document.getElementById("bookingModal");
+
+const bookingModal = document.getElementById("bookingModal");
+let currentBookingIsBnb = false;
+
 function openBooking(item) {
- document.getElementById("bookingListing").value=item.title;
- document.getElementById("bookingTitle").textContent=`Request: ${item.title}`;
- const today=new Date().toISOString().slice(0,10);
- document.getElementById("checkIn").min=today;
- document.getElementById("checkOut").min=today;
- bookingModal.hidden=false;
+    currentBookingIsBnb = item.category === "bnb";
+
+    document.getElementById("bookingListing").value = item.title;
+    document.getElementById("bookingTitle").textContent =
+        currentBookingIsBnb ? "Request your stay" : "Property enquiry";
+
+    const today = new Date().toISOString().slice(0, 10);
+
+    const checkIn = document.getElementById("checkIn");
+    const checkOut = document.getElementById("checkOut");
+
+    checkIn.value = "";
+    checkOut.value = "";
+
+    checkIn.required = currentBookingIsBnb;
+    checkOut.required = currentBookingIsBnb;
+
+    checkIn.min = today;
+    checkOut.min = today;
+
+    bookingModal.hidden = false;
 }
-document.getElementById("closeBooking").addEventListener("click",()=>bookingModal.hidden=true);
-bookingModal.addEventListener("click",e=>{if(e.target===bookingModal)bookingModal.hidden=true;});
-document.getElementById("checkIn").addEventListener("change",e=>{document.getElementById("checkOut").min=e.target.value;});
-document.getElementById("bookingForm").addEventListener("submit",event=>{
- event.preventDefault();
- const checkIn=document.getElementById("checkIn").value;
- const checkOut=document.getElementById("checkOut").value;
- if(!checkIn || !checkOut || checkOut<=checkIn){alert("Please choose a check-out date after your check-in date.");return;}
- const fields={
-  name:document.getElementById("guestName").value.trim(),
-  phone:document.getElementById("guestPhone").value.trim(),
-  guests:document.getElementById("guestCount").value,
-  property:document.getElementById("bookingListing").value
- };
- const message=`Hello ZAURAQ, I would like to request a BNB booking.\nProperty: ${fields.property}\nName: ${fields.name}\nPhone: ${fields.phone}\nGuests: ${fields.guests}\nCheck-in: ${checkIn}\nCheck-out: ${checkOut}\nPlease confirm availability and total price.`;
- window.open(`https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(message)}`,"_blank","noopener");
- bookingModal.hidden=true;
+
+document.getElementById("closeBooking").addEventListener("click", () => {
+    bookingModal.hidden = true;
 });
+
+bookingModal.addEventListener("click", e => {
+    if (e.target === bookingModal) {
+        bookingModal.hidden = true;
+    }
+});
+
+document.getElementById("checkIn").addEventListener("change", e => {
+    document.getElementById("checkOut").min = e.target.value || 
+        new Date().toISOString().slice(0, 10);
+});
+
+document.getElementById("bookingForm").addEventListener("submit", event => {
+    event.preventDefault();
+
+    const checkIn = document.getElementById("checkIn").value;
+    const checkOut = document.getElementById("checkOut").value;
+
+    if (currentBookingIsBnb && (!checkIn || !checkOut)) {
+        alert("Please select check-in and check-out dates.");
+        return;
+    }
+
+    if ((checkIn && !checkOut) || (!checkIn && checkOut)) {
+        alert("Enter both dates or leave both blank.");
+        return;
+    }
+
+    if (checkIn && checkOut && checkOut <= checkIn) {
+        alert("Check-out must be after check-in.");
+        return;
+    }
+
+    const fields = {
+        name: document.getElementById("guestName").value.trim(),
+        phone: document.getElementById("guestPhone").value.trim(),
+        guests: document.getElementById("guestCount").value,
+        property: document.getElementById("bookingListing").value
+    };
+
+    let message =
+        `Hello ZAURAQ, I would like to enquire about ${fields.property}.\n` +
+        `Name: ${fields.name}\n` +
+        `Phone: ${fields.phone}\n` +
+        `Guests: ${fields.guests}`;
+
+    if (checkIn && checkOut) {
+        message += `\nCheck-in: ${checkIn}\nCheck-out: ${checkOut}`;
+    }
+
+    window.open(
+        `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(message)}`,
+        "_blank"
+    );
+
+    bookingModal.hidden = true;
+});
+
 document.getElementById("menuToggle").addEventListener("click",()=>document.getElementById("mainNav").classList.toggle("open"));
 document.querySelectorAll(".main-nav a").forEach(link=>link.addEventListener("click",()=>document.getElementById("mainNav").classList.remove("open")));
 document.getElementById("year").textContent=new Date().getFullYear();
