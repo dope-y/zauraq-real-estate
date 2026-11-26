@@ -391,6 +391,95 @@ this.innerHTML = `
 
     </div>
 `;
+      
+// ADMIN PROPERTY STATUS MANAGER
+if (profile.role === "admin") {
+    const manager = document.getElementById("adminPropertyManager");
+    const list = document.getElementById("adminPropertyList");
+    const message = document.getElementById("adminStatusMessage");
+
+    manager.hidden = false;
+
+    async function loadAdminProperties() {
+        list.textContent = "Loading properties...";
+
+        const { data, error } = await client
+            .from("properties")
+            .select("id,title,category,location,status")
+            .order("created_at", { ascending: false });
+
+        if (error) {
+            list.textContent = "Could not load properties: " + error.message;
+            return;
+        }
+
+        list.innerHTML = "";
+
+        if (!data.length) {
+            list.textContent = "No properties found.";
+            return;
+        }
+
+        data.forEach(property => {
+            const card = document.createElement("div");
+            card.style.cssText =
+                "padding:12px;margin:12px 0;border:1px solid #555;border-radius:8px;";
+
+            const title = document.createElement("strong");
+            title.textContent = property.title;
+
+            const details = document.createElement("p");
+            details.textContent =
+                property.category.toUpperCase() + " • " + property.location;
+
+            const select = document.createElement("select");
+            select.style.cssText = "width:100%;padding:10px;margin-top:8px;";
+
+            const options = property.category === "bnb"
+                ? ["available", "booked"]
+                : ["available", "sold"];
+
+            options.forEach(value => {
+                const option = document.createElement("option");
+                option.value = value;
+                option.textContent =
+                    value.charAt(0).toUpperCase() + value.slice(1);
+                select.appendChild(option);
+            });
+
+            select.value = property.status;
+
+            select.addEventListener("change", async () => {
+                select.disabled = true;
+                message.textContent = "Updating " + property.title + "...";
+
+                const { error } = await client
+                    .from("properties")
+                    .update({ status: select.value })
+                    .eq("id", property.id);
+
+                if (error) {
+                    message.textContent = "Update failed: " + error.message;
+                    select.value = property.status;
+                } else {
+                    property.status = select.value;
+                    message.textContent =
+                        property.title + " is now " + select.value + ".";
+                }
+
+                select.disabled = false;
+            });
+
+            card.appendChild(title);
+            card.appendChild(details);
+            card.appendChild(select);
+            list.appendChild(card);
+        });
+    }
+
+    loadAdminProperties();
+}
+      
 document.getElementById("propertyPhotos").addEventListener("change", function () {
     const preview = document.getElementById("photoPreview");
     preview.innerHTML = "";
