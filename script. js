@@ -26,14 +26,10 @@ function renderProperties(items) {
     ${p.status==="available" ? `<button class="details-button" data-id="${p.id}">${p.category==="bnb"?"Request stay":"Enquire"} ↗</button>` : `<span class="details-button">Not available</span>`}</div>
    </div>
   </article>`).join("");
- grid.querySelectorAll("[data-id]").forEach(button => button.addEventListener("click", () => {
-   const item = properties.find(p => p.id === button.dataset.id);
-   if (item.category === "bnb") openBooking(item);
-   else {
-     const message = `Hello ZAURAQ, I am interested in ${item.title} in ${item.location}, listed at ${money(item.price)}. Please share more details.`;
-     window.open(`https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(message)}`, "_blank", "noopener");
-   }
- }));
+   grid.querySelectorAll("[data-id]").forEach(button => button.addEventListener("click", () => {
+    const item = properties.find(p => p.id === button.dataset.id);
+    if (item) openBooking(item);
+  }));
 }
 function escapeHTML(value) {
  return String(value ?? "").replace(/[&<>"']/g, char => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[char]));
